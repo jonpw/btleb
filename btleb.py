@@ -23,7 +23,7 @@ class XiaoMiTHDevice(gatt.Device):
         tempraw, humidityraw, uk1, uk2 = struct.unpack('<hbcc', value)
         temperature = tempraw/100
         humidity = humidityraw
-        print(f"Temperature and humidity: {str(temperature)}, {str(humidity)}")
+        print(f"Temperature and humidity: {self.mac_address} {str(temperature)}, {str(humidity)}")
         #influxwriter({"device": self.mac_address, "data": {"temperature": temperature, "humidity": humidity}})
 
     def characteristic_enable_notification_succeeded(self, characteristic):

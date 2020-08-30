@@ -37,6 +37,7 @@ devices = []
 for btmac in btmacs:
     device = XiaoMiTHDevice(mac_address=btmac, manager=manager)
     device.connect()
+    print(f"connected to {btmac}")
     devices.append(device)
 
 manager.run()

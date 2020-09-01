@@ -10,7 +10,7 @@ manager = gatt.DeviceManager(adapter_name='hci0')
 class XiaoMiTHDevice(gatt.Device):
     def services_resolved(self):
         super().services_resolved()
-
+        print(self.__class__.__name__)
         device_information_service = next(
             s for s in self.services
             if s.uuid == 'ebe0ccb0-7a0a-4b0c-8a1a-6ff2997da3a6')
@@ -24,6 +24,7 @@ class XiaoMiTHDevice(gatt.Device):
         temperature = tempraw/100
         humidity = humidityraw
         print(f"Temperature and humidity: {self.mac_address} {str(temperature)}, {str(humidity)}")
+        print(str(self.get_rssi()))
         #influxwriter({"device": self.mac_address, "data": {"temperature": temperature, "humidity": humidity}})
 
     def characteristic_enable_notification_succeeded(self, characteristic):
@@ -31,6 +32,9 @@ class XiaoMiTHDevice(gatt.Device):
 
     def characteristic_enable_notification_failed(self, characteristic):
         print(f"Enabled notification failed on {characteristic}")
+
+    def get_rssi(self):
+        return super.get_rssi()
 
 btmacs = ('A4:C1:38:7F:7B:F1', 'A4:C1:38:A9:98:38')
 devices = []
@@ -40,4 +44,8 @@ for btmac in btmacs:
     print(f"connected to {btmac}")
     devices.append(device)
 
-manager.run()
+try:
+    manager.run()
+except:
+    for device in devices:
+        device.disconnect()
